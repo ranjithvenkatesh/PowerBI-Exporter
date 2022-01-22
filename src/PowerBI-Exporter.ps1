@@ -6,7 +6,8 @@ param(
     [string]$ProjectFolder,
     [string]$Environment,
     [string]$ReportID,
-    [string]$ReportName
+    [string]$ReportName,
+    [string]$WorkspaceID
     )
 
 # Power BI REST API URIS
@@ -33,3 +34,11 @@ $PowerBI_REPORT_EXPORT_API = "https://api.powerbi.com/v1.0/myorg/reports/" + $Re
 $PowerBI_REPORT_Name = $ReportName + ".pbix"
 Invoke-RestMethod -Method Get -Uri $PowerBI_REPORT_EXPORT_API -ContentType 'application/zip' -Headers @{authorization = $PowerBI_TOKEN_JSON} -OutFile $PowerBI_REPORT_Name
 Write-HostLog -Message "Report exported."
+
+$PowerBI_REST_API_Groups = "https://api.powerbi.com/v1.0/myorg/groups"
+$PowerBI_REST_API_GroupReports = $PowerBI_REST_API_Groups + "/" + $WorkspaceID + "/" + "reports"
+Write-HostLog -Message "Getting Reports in Workspace..."
+$PowerBI_SSBI_Reports = Invoke-RestMethod -Method Get -Uri $PowerBI_REST_API_GroupReports -ContentType 'application/json' -Headers @{authorization = $PowerBI_TOKEN_JSON}
+Write-HostLog -Message "Number of Reports in Workspace:"
+Write-Host $PowerBI_SSBI_Reports.value.Count
+$PowerBI_SSBI_Reports.value | Format-Table
