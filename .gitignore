@@ -1,2 +1,4 @@
 src/PowerBI-Exporter.DEV.config.json
 src/PowerBI-Exporter.PRO.config.json
+src/PowerBI-Exporter.MAL.config.json
+src/*.pbix
